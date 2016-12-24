@@ -1,0 +1,23 @@
+<html ng-app="naoouvo">
+<head>
+    <meta charset="UTF-8">
+    <title>Não Ouvo</title>
+    <link rel="stylesheet" type="text/css" href="/res/lib/bootstrap/bootstrap.css">
+    <script type="text/javascript" src="/res/lib/angular/angular.js"></script>
+    <link rel="stylesheet" type="text/css" href="/res/naoouvo/css/custom-style.css">
+    <script type="text/javascript" src="/res/naoouvo/js/app.js"></script>
+    <script type="text/javascript" src="/res/naoouvo/js/controllers/mainController.js"></script>
+</head>
+<body ng-controller="main" class="container-fluid" style="background: #F5DD01">
+    <div class="row">
+        <div class="col-md-4" style="background: #F50000"></div>
+        <div class="col-md-4" style="text-align: center">
+            <div class="row"><h1>{{feed.title}}</h1></div>
+
+        <div class="list-group" ng-repeat="podcast in feed.entries">
+        <a  class="list-group-item list-group-item-action">{{podcast.title}}</a>
+        </div>
+        <div class="col-md-4 center" style="background: #F50000"></div>
+    </div>
+</body>
+</html>

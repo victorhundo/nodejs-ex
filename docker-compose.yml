@@ -1,0 +1,11 @@
+version: '2'
+
+services:   
+    node-apps:     
+        build: .
+        image: node-apps:latest
+        ports:
+            - "1915:8080"
+        restart: always
+        volumes:
+            - ./:/workspace
