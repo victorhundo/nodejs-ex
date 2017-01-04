@@ -1,13 +1,74 @@
 <div class="row content">
+<div class="col-md-1"></div>
+<div class="col-md-11">
 
-<div class="col-md-2"  ng-repeat="podcast in feed.todos">
-    <a href="#" class="thumbnail">
-      <img src="{{podcast.img}}">
-    </a>
+	<div class="row">
+
+	<a href="#" class="col-sm-1 text-right vcenter next-prev" style="padding: 0px" ng-click="prevPag()">
+		<span class="glyphicon glyphicon-chevron-left"></span>
+	</a>
+    <div class="col-sm-9  vcenter" style="padding: 0px">
+			<div class="panel panel-primary" >
+				
+			  <div class="panel-heading">
+			    <h3 class="panel-title">Todos {{currentPag}}/{{nPag}} </h3>
+			  </div>
+			  <div class="panel-body">
+				    <div class="col-sm-3"  ng-repeat="podcast in feed.todos.slice(Npagination * (currentPag - 1), Npagination * currentPag)">
+				    <a href="#" class="thumbnail" >
+				      <img src="{{podcast.img}}">
+				    </a>
+				    <p>{{podcast.title.split('-')[1]}}</p>
+					</div>
+
+			  </div>
+			</div>
+    </div>
+    <a href="#" class="col-sm-1 text-left vcenter next-prev" style="padding: 0px" ng-click="nextPag()">
+		<span class="glyphicon glyphicon-chevron-right"></span>
+	</a>
+	</div>
 </div>
+<div class="col-md-1"></div>
 </div>
 
 
 
+<!--
+	<div class="panel panel-primary">
+	
+  <div class="panel-heading">
+    <h3 class="panel-title">Todos</h3>
+  </div>
+  <div class="panel-body pager">
+	    <div class="col-sm-2"  ng-repeat="podcast in feed.todos.slice(0,6)">
+	    <a href="#" class="thumbnail">
+	      <img src="{{podcast.img}}">
+	    </a>
+		</div>
+  </div>
+</div>
 
 
+
+<div class="row" style="background: #fff">
+		<a href="#" class="col-sm-1 text-center">
+			<span class="glyphicon glyphicon-chevron-left"></span>
+		</a>
+		<div class="col-sm-10">
+				<div class="col-sm-2"  ng-repeat="podcast in feed.todos.slice(0,6)">
+	    <a href="#" class="thumbnail">
+	      <img src="{{podcast.img}}">
+	    </a>
+		</div>
+
+
+
+
+
+		</div>
+		<a href="#" class="col-sm-1 text-center">
+			<span class="glyphicon glyphicon-chevron-right"></span>
+		</a>
+	</div>
+!-->

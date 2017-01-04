@@ -1,3 +1,8 @@
+a:active, a:focus, .btn:focus,.btn:active { 
+    outline: none !important; 
+    ie-dummy: expression(this.hideFocus=true);
+}
+
 footer {
     position: fixed;
     bottom: 0;
@@ -6,4 +11,14 @@ footer {
 
 .content{
 	margin-bottom: 100px;
+}
+
+.vcenter {
+    float: none;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.next-prev{
+	font-size: 30px;
 }
