@@ -11,10 +11,10 @@
 			<div class="panel panel-primary" >
 				
 			  <div class="panel-heading">
-			    <h3 class="panel-title">Todos {{currentPag}}/{{nPag}} </h3>
+			    <h3 class="panel-title">{{feedTitle}} {{currentPod}}/{{nPod}} </h3>
 			  </div>
 			  <div class="panel-body">
-				    <div class="col-sm-3"  ng-repeat="podcast in feed.todos.slice(Npagination * (currentPag - 1), Npagination * currentPag)">
+				    <div class="col-sm-3"  ng-repeat="podcast in exibition">
 				    <a href="#" class="thumbnail" >
 				      <img src="{{podcast.img}}">
 				    </a>
