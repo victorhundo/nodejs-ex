@@ -1,7 +1,24 @@
-<div  class="row" style="background: #ccc">
-<div class="col-md-4"></div>
-	<div class="col-md-4" style="text-align: center">
-	    <div class="row"><h3>{{feed.title}}</h3></div>
-	</div>
-<div class="col-md-4"></div>
+<div  class="row">
+
+<div class="col-md-1 text-right">
+	<h3>
+    <a href="#" class="play" ng-if="!onPlay" 	ng-click="play()">
+		<span class="glyphicon glyphicon-play" 	></span>
+	</a>
+	<a href="#" class="play" ng-if="onPlay" 	ng-click="pause()">
+		<span class="glyphicon glyphicon-pause"></span>
+	</a>
+	</h3>
+</div>
+<div class="col-md-10 text-center">
+<p>
+<div class="progress painel">
+  <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: {{durationPorcent}}%">
+  </div>
+</div>
+{{currentAudio.title}}
+<audio id="player" src="{{trustSrc()}}" autobuffer="true" controls ng-show="false"/>
+
+</p>
+</div>
 </div>

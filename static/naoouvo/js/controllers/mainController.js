@@ -1,17 +1,46 @@
-angular.module("naoouvo").controller("main", function($scope, $http, $window){
+angular.module("naoouvo").controller("main", function($scope, $http, $window, $sce){
 
+    $scope.onPlay = false;
+
+    $scope.play = function(){
+        var player = document.getElementById('player');
+        $scope.onPlay  = true;
+        player.play();
+    }
+
+    $scope.pause = function(){
+        $scope.onPlay  = false;
+        var player = document.getElementById('player');
+        player.pause();
+    }
+
+    $scope.trustSrc = function() {
+        return $sce.trustAsResourceUrl($scope.currentAudio.link);
+    }
     var NaoOuvoFeed = "/naoouvo/feed";
     $scope.Npagination = 4;
     var count = 0;
     $http.get(NaoOuvoFeed).success(function(data) {
             $scope.feed = data;
             setCurrentFeed($scope.feed.todos, "Todos");
+            setCurrentAudio($scope.currentFeed[0]);
             setExibition();
     });
+
+    $scope.setAudio = function(audio){
+        var player = document.getElementById('player');
+        player.autoplay = true;
+        setCurrentAudio(audio);
+        $scope.play();
+    }
 
     $scope.changeFeed = function(feed, title){
     	setCurrentFeed(feed, title);
     	setExibition();
+    }
+
+    var setCurrentAudio = function(audio){
+        $scope.currentAudio = audio;
     }
 
     var setCurrentFeed = function(feed, title){
@@ -54,4 +83,25 @@ angular.module("naoouvo").controller("main", function($scope, $http, $window){
     	count--;
     	setExibition();
     }
+
+    $scope.getAudio = function(){
+        return $scope.trustSrc($scope.exibition[0].link);
+    }
+
+    var updateSeek = function(){
+        var player = document.getElementById("player");
+        if (player == null){
+            $scope.seek = 0
+            $scope.duration = 0
+        }else{
+            $scope.now = player.currentTime
+            $scope.duration = player.duration
+            $scope.durationPorcent = parseFloat(Math.round($scope.now * 100) / $scope.duration).toFixed(2);
+            $scope.durationInt = Math.ceil( $scope.durationPorcent );
+        }
+        
+        $scope.$apply();
+
+    }
+    setInterval(updateSeek, 100);
 });

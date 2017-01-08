@@ -3,10 +3,15 @@ a:active, a:focus, .btn:focus,.btn:active {
     ie-dummy: expression(this.hideFocus=true);
 }
 
+{
+    color: #fff;
+}
+
 footer {
     position: fixed;
     bottom: 0;
     width: 100%;
+    background-color: #e1ce1e;
 }
 
 .content{
@@ -19,6 +24,25 @@ footer {
     vertical-align: middle;
 }
 
-.next-prev{
+.next-prev,.next-prev:hover, .next-prev:focus{
 	font-size: 30px;
+    color: #3E3D39;
+}
+
+.play{
+    font-size: 30px;
+    color: #3E3D39
+}
+
+.painel{
+    margin-bottom: 5px;
+}
+.panel-primary {
+    border-color: #3E3D39;
+}
+
+.panel-primary > .panel-heading {
+    color: #fff;
+    background-color: #3E3D39;
+    border-color: #3E3D39;
 }

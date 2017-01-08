@@ -75,20 +75,34 @@ naoouvo.get('/feed', function (req, res) {
     }
 
 
-    for(i in podcasts.teoria)
+    for(i in podcasts.teoria){
+        podcasts["teoria"][i]["id"] = parseInt(i);
     	podcasts["teoria"][i]["img"] = "/res/naoouvo/img/teoria/" + ++i + ".jpg";
-    for(i in podcasts.musical)
+    }
+    for(i in podcasts.musical){
+        podcasts["musical"][i]["id"] = parseInt(i);
     	podcasts["musical"][i]["img"] = "/res/naoouvo/img/musical/" + ++i + ".jpg";
-    for(i in podcasts.cartinha)
+    }
+    for(i in podcasts.cartinha){
+        podcasts["cartinha"][i]["id"] = parseInt(i);
     	podcasts["cartinha"][i]["img"] = "/res/naoouvo/img/cartinha/" + ++i + ".jpg";
-    for(i in podcasts.visita)
+    }
+    for(i in podcasts.visita){
+        podcasts["visita"][i]["id"] = parseInt(i);
     	podcasts["visita"][i]["img"] = "/res/naoouvo/img/visita/" + ++i + ".jpg";
-    for(i in podcasts.plantao)
+    }
+    for(i in podcasts.plantao){
+        podcasts["plantao"][i]["id"] = parseInt(i);
     	podcasts["plantao"][i]["img"] = "/res/naoouvo/img/plantao/" + ++i + ".jpg";
-    for(i in podcasts.naoouvo)
+    }
+    for(i in podcasts.naoouvo){
+        podcasts["naoouvo"][i]["id"] = parseInt(i);
     	podcasts["naoouvo"][i]["img"] = "/res/naoouvo/img/naoouvo/" + ++i + ".jpg";
-    for(i in podcasts.outros)
+    }
+    for(i in podcasts.outros){
+        podcasts["outros"][i]["id"] = parseInt(i);
     	podcasts["outros"][i]["img"] = "/res/naoouvo/img/outros/1.jpg";
+    }
 
     count = feed.length;
     podcasts["num"] = count;
