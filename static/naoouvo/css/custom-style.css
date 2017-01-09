@@ -46,3 +46,11 @@ footer {
     background-color: #3E3D39;
     border-color: #3E3D39;
 }
+
+.barcelona{
+    position: absolute;
+    left: 0px;
+    left: 14px;
+    background: #000;
+    opacity: 0.5;
+}

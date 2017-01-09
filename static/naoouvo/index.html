@@ -8,8 +8,12 @@
     <script type="text/javascript" src="/res/naoouvo/js/app.js"></script>
     <script type="text/javascript" src="/res/naoouvo/js/controllers/mainController.js"></script>
 </head>
-<body ng-controller="main" class="container-fluid" style="background: #F8E320">
+<body ng-controller="main" class="container-fluid" style="background: #E9E9E9">
     <div ng-include="'/res/naoouvo/html/menu.html'"></div>
+    {{requestedPosition}}
+    
+
+    {{durationPorcent}} ---- {{now}}
     <div ng-include="'/res/naoouvo/html/content.html'"></div>
     <footer class="navbar-fixed-bottom" ng-include="'/res/naoouvo/html/player.html'"></div>        
 </body>

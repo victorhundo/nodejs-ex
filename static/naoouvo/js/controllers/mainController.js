@@ -103,5 +103,20 @@ angular.module("naoouvo").controller("main", function($scope, $http, $window, $s
         $scope.$apply();
 
     }
-    setInterval(updateSeek, 100);
+    //setInterval(updateSeek, 100);
+
+    var updateProgressBar = function(e){
+        $scope.barWidth = e.target.clientWidth;
+    }
+
+
+    $scope.handleProgressBarClick = function(e){
+        var fullProgressBarWidth = e.target.clientWidth;
+        $scope.requestedPosition = (e.layerX / fullProgressBarWidth * 100).toFixed(2);
+
+        var player = document.getElementById("player");
+        $scope.durationPorcent = $scope.requestedPosition;
+        player.currentTime = e.layerX;
+
+    }
 });
