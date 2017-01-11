@@ -13,11 +13,14 @@
 <div class="col-md-10 text-center">
 <p>
 <div class="progress painel" >
-  <div id="progressBar" ng-model="bar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{durationPorcent}}%">
+  <div id="progressBar" ng-model="bar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: {{durationPorcent}}%"> 
   <a href="#" ng-click="handleProgressBarClick($event)" style="height: 20px; width: 98%;" class="barcelona"></a>
-  </div>
+  </div> 
 </div>
+
 {{currentAudio.title}}
+{{clock}} / {{clockDuration}}
+
 <audio id="player" src="{{trustSrc()}}" autobuffer="true" controls ng-show="false"/>
 
 </p>

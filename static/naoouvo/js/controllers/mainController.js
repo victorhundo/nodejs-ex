@@ -94,18 +94,34 @@ angular.module("naoouvo").controller("main", function($scope, $http, $window, $s
         if (player == null){
             $scope.seek = 0
             $scope.duration = 0
-        }else{
+        }
+        else{
             $scope.now = player.currentTime
             $scope.duration = player.duration
-            $scope.durationPorcent = parseFloat(Math.round($scope.now * 100) / $scope.duration).toFixed(2);
-            $scope.durationInt = Math.ceil( $scope.durationPorcent );
+            $scope.durationPorcent = (player.currentTime * 100 / player.duration).toFixed(2);
+            var nowInt = Math.ceil( player.currentTime );
+            var durationInt = Math.ceil(player.duration);
+            $scope.clock = clockFormat(nowInt);
+            $scope.clockDuration = clockFormat(durationInt);
         }
         
         $scope.$apply();
-
     }
     
-    //setInterval(updateSeek, 100);
+    setInterval(updateSeek, 100);
+
+
+    var clockFormat = function(sec){
+        s =    parseInt(sec % 60)
+        min = sec / 60;
+        m =  parseInt(min % 60);
+        h =  parseInt(min / 60);
+        return pad(h) + ":" + pad(m) + ":" +  pad(s);
+    }
+
+    var pad = function (d) {
+        return (d < 10) ? '0' + d.toString() : d.toString();
+    }
 
     var updateProgressBar = function(e){
         $scope.barWidth = e.target.clientWidth;
@@ -117,8 +133,7 @@ angular.module("naoouvo").controller("main", function($scope, $http, $window, $s
         $scope.requestedPosition = (e.layerX / fullProgressBarWidth * 100).toFixed(2);
 
         var player = document.getElementById("player");
-        $scope.durationPorcent = $scope.requestedPosition;
-        player.currentTime = e.layerX;
-
+        $scope.now = ($scope.requestedPosition * $scope.duration/100).toFixed(2);
+        player.currentTime = $scope.now;
     }
 });
