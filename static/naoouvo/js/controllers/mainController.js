@@ -1,5 +1,13 @@
 angular.module("naoouvo").controller("main", function($scope, $http, $window, $sce){
-
+    var NaoOuvoFeed = "/naoouvo/feed";
+    $scope.Npagination = 4;
+    var count = 0;
+    $http.get(NaoOuvoFeed).success(function(data) {
+            $scope.feed = data;
+            setCurrentFeed($scope.feed.todos, "Todos");
+            setCurrentAudio($scope.currentFeed[0]);
+            setExibition();
+    });
     $scope.onPlay = false;
 
     $scope.play = function(){
@@ -15,17 +23,10 @@ angular.module("naoouvo").controller("main", function($scope, $http, $window, $s
     }
 
     $scope.trustSrc = function() {
+        if ($scope.currentAudio == undefined)
+            return "null";
         return $sce.trustAsResourceUrl($scope.currentAudio.link);
     }
-    var NaoOuvoFeed = "/naoouvo/feed";
-    $scope.Npagination = 4;
-    var count = 0;
-    $http.get(NaoOuvoFeed).success(function(data) {
-            $scope.feed = data;
-            setCurrentFeed($scope.feed.todos, "Todos");
-            setCurrentAudio($scope.currentFeed[0]);
-            setExibition();
-    });
 
     $scope.setAudio = function(audio){
         var player = document.getElementById('player');
@@ -103,6 +104,7 @@ angular.module("naoouvo").controller("main", function($scope, $http, $window, $s
         $scope.$apply();
 
     }
+    
     //setInterval(updateSeek, 100);
 
     var updateProgressBar = function(e){

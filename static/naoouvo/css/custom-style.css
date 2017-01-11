@@ -49,8 +49,8 @@ footer {
 
 .barcelona{
     position: absolute;
-    left: 0px;
     left: 14px;
     background: #000;
     opacity: 0.5;
+    z-index: 99;
 }

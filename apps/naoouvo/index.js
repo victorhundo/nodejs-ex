@@ -6,112 +6,125 @@ var request = require('sync-request');
 
 var naoouvo = express();
 var count = 0;
+var delayFunction = 300000; //5min
+var feed = undefined;
 
 var getFeed = function(){
-	apiGoogle = "http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=9999999&q=";
-    site = "http://feeds.feedburner.com/naoouvo";
-    var resa = request('GET', apiGoogle+site);
-    feed = JSON.parse(resa.getBody()).responseData.feed;
-    return feed.entries;
+   feed = myFeed();
 }
+setInterval(getFeed, delayFunction);
+
+naoouvo.get('/', function (req, res) {  
+  res.sendfile('./static/naoouvo/index.html');
+});
 
 naoouvo.get('/feed', function (req, res) {
     res.set({'Content-Type': 'application/json'});
-    feed = getFeed();
+    if (feed == undefined)
+        getFeed();
+    res.json(feed);  
+});
+
+var getData = function(){
+    //select * from html where url="http://feeds.feedburner.com/naoouvo"
+    query = "select%20*%20from%20html%20where%20url%3D%22http%3A%2F%2Ffeeds.feedburner.com%2Fnaoouvo%22%20&format=json&diagnostics=true&callback=";
+    yahoo = "https://query.yahooapis.com/v1/public/yql?q=";
+    yql = yahoo + query;
+
+    var html = request('GET', yql);
+    feed = JSON.parse(html.getBody()).query.results.body.rss.channel.image.info.thumbnail.category;
+    feed = feed[feed.length - 1].category.category;
+    feed = feed[feed.length - 1].category.category;
+    return feed.item;
+}
+
+var myFeed = function(){
+    var myFeed = getData();
     podcasts = {
-    	title: "Não Ouvo",
-    	num: count,
-    	todos: [],
-    	naoouvo: [],
-    	teoria:[],
-    	musical: [],
-    	cartinha: [],
-    	visita: [],
-    	plantao: [],
-    	outros: []
+        title: "Não Ouvo",
+        num: count,
+        todos: [],
+        naoouvo: [],
+        teoria:[],
+        musical: [],
+        cartinha: [],
+        visita: [],
+        plantao: [],
+        outros: []
     };
 
-    for(i = feed.length - 1; i >= 0; i--){
-    	podcast = {}
-    	podcast["title"] = feed[i]["title"];
-    	podcast["link"] = feed[i]["link"];
-    	var check = podcast["title"].split('-')[0];
-    	
-    	if(check.match("Teoria")){
-    		podcast["categoria"] = "teoria";
-    		podcasts.teoria.push(podcast);
-    	}
-    		
-    	else if (check.match("Musical")){
-    		podcast["categoria"] = "musical";
-    		podcasts.musical.push(podcast);
-    	}		
-    	else if (check.match("Cartinha")){
-    		podcast["categoria"] = "cartinha";
-    		podcasts.cartinha.push(podcast);
-    	}
-    	else if (check.match("Visita")){
-    		podcast["categoria"] = "visita";
-    		podcasts.visita.push(podcast);
-    	}
-    	else if (check.match("Plantão")){
-    		podcast["categoria"] = "plantao";
-    		podcasts.plantao.push(podcast);
-    	}
-    	else if (check.match("Extra")){
-    		podcast["categoria"] = "extra";
-    		podcasts.outros.push(podcast);
-    	}
-    	else if (!check.match("Não Ouvo")){
-    		podcast["categoria"] = "outros";
-    		podcasts.outros.push(podcast);
-    	}
-    	else{
-    		podcast["categoria"] = "naoouvo";
-    		podcasts.naoouvo.push(podcast);
-    	}
-    	
-    	podcasts.todos.push(podcast);
+    for(i = myFeed.length - 1; i >= 0; i--){
+        podcast = {}
+        podcast["title"] = myFeed[i]["content"];
+        podcast["subtitle"] = myFeed[i]["subtitle"]["summary"];
+        podcast["link"] = myFeed[i]["subtitle"]["image"]["enclosure"]["url"];
+        podcast["img"] = myFeed[i]["subtitle"]["image"]["href"];
+        var check = podcast["title"].split('-')[0];
+        
+        if(check.match("Teoria")){
+            podcast["categoria"] = "teoria";
+            podcasts.teoria.push(podcast);
+        }
+            
+        else if (check.match("Musical")){
+            podcast["categoria"] = "musical";
+            podcasts.musical.push(podcast);
+        }       
+        else if (check.match("Cartinha")){
+            podcast["categoria"] = "cartinha";
+            podcasts.cartinha.push(podcast);
+        }
+        else if (check.match("Visita")){
+            podcast["categoria"] = "visita";
+            podcasts.visita.push(podcast);
+        }
+        else if (check.match("Plantão")){
+            podcast["categoria"] = "plantao";
+            podcasts.plantao.push(podcast);
+        }
+        else if (check.match("Extra")){
+            podcast["categoria"] = "extra";
+            podcasts.outros.push(podcast);
+        }
+        else if (!check.match("Não Ouvo")){
+            podcast["categoria"] = "outros";
+            podcasts.outros.push(podcast);
+        }
+        else{
+            podcast["categoria"] = "naoouvo";
+            podcasts.naoouvo.push(podcast);
+        }
+        
+        podcasts.todos.push(podcast);
     }
 
 
     for(i in podcasts.teoria){
         podcasts["teoria"][i]["id"] = parseInt(i);
-    	podcasts["teoria"][i]["img"] = "/res/naoouvo/img/teoria/" + ++i + ".jpg";
     }
     for(i in podcasts.musical){
         podcasts["musical"][i]["id"] = parseInt(i);
-    	podcasts["musical"][i]["img"] = "/res/naoouvo/img/musical/" + ++i + ".jpg";
     }
     for(i in podcasts.cartinha){
         podcasts["cartinha"][i]["id"] = parseInt(i);
-    	podcasts["cartinha"][i]["img"] = "/res/naoouvo/img/cartinha/" + ++i + ".jpg";
     }
     for(i in podcasts.visita){
         podcasts["visita"][i]["id"] = parseInt(i);
-    	podcasts["visita"][i]["img"] = "/res/naoouvo/img/visita/" + ++i + ".jpg";
     }
     for(i in podcasts.plantao){
         podcasts["plantao"][i]["id"] = parseInt(i);
-    	podcasts["plantao"][i]["img"] = "/res/naoouvo/img/plantao/" + ++i + ".jpg";
     }
     for(i in podcasts.naoouvo){
         podcasts["naoouvo"][i]["id"] = parseInt(i);
-    	podcasts["naoouvo"][i]["img"] = "/res/naoouvo/img/naoouvo/" + ++i + ".jpg";
     }
     for(i in podcasts.outros){
         podcasts["outros"][i]["id"] = parseInt(i);
-    	podcasts["outros"][i]["img"] = "/res/naoouvo/img/outros/1.jpg";
     }
 
-    count = feed.length;
+    count = myFeed.length;
     podcasts["num"] = count;
-    res.json(podcasts);  
-});
-
-naoouvo.get('/', function (req, res) {  
-  res.sendfile('./static/naoouvo/index.html');
-});
+    return podcasts;
+}
 
 module.exports = naoouvo;
 
