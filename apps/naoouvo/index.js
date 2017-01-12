@@ -3,6 +3,7 @@ var express = require('express');
 var fs      = require('fs');
 var path = require('path');
 var request = require('sync-request');
+var Find = require('find-key');
 
 var naoouvo = express();
 var count = 0;
@@ -21,7 +22,7 @@ naoouvo.get('/', function (req, res) {
 naoouvo.get('/feed', function (req, res) {
     res.set({'Content-Type': 'application/json'});
     if (feed == undefined)
-        getFeed();
+        feed = getData();
     res.json(feed);  
 });
 
@@ -32,14 +33,14 @@ var getData = function(){
     yql = yahoo + query;
 
     var html = request('GET', yql);
-    feed = JSON.parse(html.getBody()).query.results.body.rss.channel.image.info.thumbnail.category;
-    feed = feed[feed.length - 1].category.category;
-    feed = feed[feed.length - 1].category.category;
-    return feed.item;
+    var bruteFeed = JSON.parse(html.getBody());
+    bruteFeed = Find(bruteFeed, 'category')[0]
+    bruteFeed = bruteFeed[bruteFeed.length - 1].category.category[1];
+    brutefeed = Find(bruteFeed, 'item')[0];
+    return myFeed(brutefeed);
 }
 
-var myFeed = function(){
-    var myFeed = getData();
+var myFeed = function(myFeed){
     podcasts = {
         title: "Não Ouvo",
         num: count,
@@ -55,75 +56,69 @@ var myFeed = function(){
 
     for(i = myFeed.length - 1; i >= 0; i--){
         podcast = {}
-        podcast["title"] = myFeed[i]["content"];
-        podcast["subtitle"] = myFeed[i]["subtitle"]["summary"];
-        podcast["link"] = myFeed[i]["subtitle"]["image"]["enclosure"]["url"];
-        podcast["img"] = myFeed[i]["subtitle"]["image"]["href"];
+        podcast["title"]    =      Find(myFeed[i], 'content')[1];
+        podcast["subtitle"] =      Find(myFeed[i], 'summary')[0];
+        podcast["link"]     =      Find(myFeed[i], 'url')[0];
+        podcast["img"]      =      Find(myFeed[i], 'href')[0];
         var check = podcast["title"].split('-')[0];
         
         if(check.match("Teoria")){
-            podcast["categoria"] = "teoria";
+            podcast["id"] = podcasts.teoria.length;
             podcasts.teoria.push(podcast);
         }
             
         else if (check.match("Musical")){
-            podcast["categoria"] = "musical";
+            podcast["id"] = podcasts.musical.length;
             podcasts.musical.push(podcast);
         }       
         else if (check.match("Cartinha")){
-            podcast["categoria"] = "cartinha";
+            podcast["id"] = podcasts.cartinha.length;
             podcasts.cartinha.push(podcast);
         }
         else if (check.match("Visita")){
-            podcast["categoria"] = "visita";
+            podcast["id"] = podcasts.visita.length;
             podcasts.visita.push(podcast);
         }
         else if (check.match("Plantão")){
-            podcast["categoria"] = "plantao";
+            podcast["id"] = podcasts.plantao.length;
             podcasts.plantao.push(podcast);
         }
         else if (check.match("Extra")){
-            podcast["categoria"] = "extra";
+            podcast["id"] = podcasts.outros.length;
             podcasts.outros.push(podcast);
         }
         else if (!check.match("Não Ouvo")){
-            podcast["categoria"] = "outros";
+            podcast["id"] = podcasts.outros.length;
             podcasts.outros.push(podcast);
         }
         else{
-            podcast["categoria"] = "naoouvo";
+            podcast["id"] = podcasts.naoouvo.length;
             podcasts.naoouvo.push(podcast);
         }
-        
         podcasts.todos.push(podcast);
-    }
-
-
-    for(i in podcasts.teoria){
-        podcasts["teoria"][i]["id"] = parseInt(i);
-    }
-    for(i in podcasts.musical){
-        podcasts["musical"][i]["id"] = parseInt(i);
-    }
-    for(i in podcasts.cartinha){
-        podcasts["cartinha"][i]["id"] = parseInt(i);
-    }
-    for(i in podcasts.visita){
-        podcasts["visita"][i]["id"] = parseInt(i);
-    }
-    for(i in podcasts.plantao){
-        podcasts["plantao"][i]["id"] = parseInt(i);
-    }
-    for(i in podcasts.naoouvo){
-        podcasts["naoouvo"][i]["id"] = parseInt(i);
-    }
-    for(i in podcasts.outros){
-        podcasts["outros"][i]["id"] = parseInt(i);
     }
 
     count = myFeed.length;
     podcasts["num"] = count;
     return podcasts;
+}
+
+
+var getKey = function(obj, key){
+    if (Object.keys(obj).indexOf(key) >= 0)
+        return obj[key];
+    else{
+        for(i = 0; i < Object.keys(obj).length; i++){
+            if( typeof(obj[Object.keys(obj)[i]]) == 'object'){
+                a = getKey(obj[Object.keys(obj)[i]], key);
+                console.log(i);
+                return a;
+            }
+                
+        }
+    }
+
+    return "null";
 }
 
 module.exports = naoouvo;
