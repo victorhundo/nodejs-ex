@@ -16,9 +16,9 @@
 			  <div class="panel-body">
 				    <div class="col-sm-3"  ng-repeat="podcast in exibition">
 				    <a href="#" class="thumbnail" ng-click="setAudio(podcast)">
-				      <img src="{{podcast.img}}">
+				      <img ng-src="{{podcast.img}}">
 				    </a>
-				    <p>{{podcast.title.split('-')[1]}}</p>
+				    <p>{{getPodcastTitle(podcast.title)}}</p>
 					</div>
 
 			  </div>

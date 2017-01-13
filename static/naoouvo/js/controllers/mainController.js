@@ -10,6 +10,11 @@ angular.module("naoouvo").controller("main", function($scope, $http, $window, $s
             setExibition();
             
     });
+
+    $scope.getImg = function(url){
+       console.log(url);
+    }
+
     $scope.onPlay = false;
 
     $scope.play = function(){
@@ -49,12 +54,13 @@ angular.module("naoouvo").controller("main", function($scope, $http, $window, $s
     }
 
     $scope.nextAudio = function(){
-        var audio = $scope.feedOnPlay[$scope.currentAudio.id + 1];
+        var x = $scope.currentAudio.id + 1;
+        var y = $scope.feedOnPlay.length
+        var index = x - y * Math.floor(x / y);
+        var audio = $scope.feedOnPlay[index];
        $scope.setAudio(audio);
-       console.log("O LOCO BIXO");
+       $scope.play();
     }
-
-
 
     var setCurrentFeed = function(feed, title){
     	count = 0;
@@ -123,17 +129,12 @@ angular.module("naoouvo").controller("main", function($scope, $http, $window, $s
     
     setInterval(updateSeek, 100);
 
-
     var clockFormat = function(sec){
-        s =    parseInt(sec % 60)
-        min = sec / 60;
-        m =  parseInt(min % 60);
-        h =  parseInt(min / 60);
-        return pad(h) + ":" + pad(m) + ":" +  pad(s);
-    }
-
-    var pad = function (d) {
-        return (d < 10) ? '0' + d.toString() : d.toString();
+        var t = new Date();
+        t.setHours(0,0,0,0);
+        if (!isNaN(sec))
+            t.setSeconds(sec);
+        return t
     }
 
     var updateProgressBar = function(e){
@@ -149,4 +150,11 @@ angular.module("naoouvo").controller("main", function($scope, $http, $window, $s
         $scope.now = ($scope.requestedPosition * $scope.duration/100).toFixed(2);
         player.currentTime = $scope.now;
     }
+
+    $scope.getPodcastTitle = function(title){
+        if(title.indexOf('-') >= 0)
+            return title.split('-')[1];
+        return title;
+    }
+    
 });
