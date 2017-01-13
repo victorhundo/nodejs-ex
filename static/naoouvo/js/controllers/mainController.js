@@ -1,4 +1,5 @@
 angular.module("naoouvo").controller("main", function($scope, $http, $window, $sce){
+
     var NaoOuvoFeed = "/naoouvo/feed";
     $scope.Npagination = 4;
     var count = 0;
@@ -7,11 +8,14 @@ angular.module("naoouvo").controller("main", function($scope, $http, $window, $s
             setCurrentFeed($scope.feed.todos, "Todos");
             setCurrentAudio($scope.currentFeed[0]);
             setExibition();
+            
     });
     $scope.onPlay = false;
 
     $scope.play = function(){
+        $scope.feedOnPlay = $scope.currentFeed;
         var player = document.getElementById('player');
+        player.addEventListener('ended', $scope.nextAudio);
         $scope.onPlay  = true;
         player.play();
     }
@@ -44,6 +48,14 @@ angular.module("naoouvo").controller("main", function($scope, $http, $window, $s
         $scope.currentAudio = audio;
     }
 
+    $scope.nextAudio = function(){
+        var audio = $scope.feedOnPlay[$scope.currentAudio.id + 1];
+       $scope.setAudio(audio);
+       console.log("O LOCO BIXO");
+    }
+
+
+
     var setCurrentFeed = function(feed, title){
     	count = 0;
     	$scope.feedTitle = title;
@@ -64,6 +76,7 @@ angular.module("naoouvo").controller("main", function($scope, $http, $window, $s
     	}
     	$scope.exibition = exibition;
     	$scope.currentPod = index[0] + 1;
+
     }
 
     var arrayMod = function(x, y){

@@ -11,7 +11,7 @@ var delayFunction = 300000; //5min
 var feed = undefined;
 
 var getFeed = function(){
-   feed = myFeed();
+   feed = getData();
 }
 setInterval(getFeed, delayFunction);
 
@@ -22,7 +22,7 @@ naoouvo.get('/', function (req, res) {
 naoouvo.get('/feed', function (req, res) {
     res.set({'Content-Type': 'application/json'});
     if (feed == undefined)
-        feed = getData();
+        getFeed();
     res.json(feed);  
 });
 
@@ -61,6 +61,10 @@ var myFeed = function(myFeed){
         podcast["link"]     =      Find(myFeed[i], 'url')[0];
         podcast["img"]      =      Find(myFeed[i], 'href')[0];
         var check = podcast["title"].split('-')[0];
+
+        var todos = JSON.parse(JSON.stringify(podcast));
+        todos["id"] = podcasts.todos.length;
+        podcasts.todos.push(todos);
         
         if(check.match("Teoria")){
             podcast["id"] = podcasts.teoria.length;
@@ -95,7 +99,6 @@ var myFeed = function(myFeed){
             podcast["id"] = podcasts.naoouvo.length;
             podcasts.naoouvo.push(podcast);
         }
-        podcasts.todos.push(podcast);
     }
 
     count = myFeed.length;
